@@ -21,11 +21,18 @@ async function run() {
         const placesCollection = database.collection('places');
         const ordersCollection = database.collection('orders');
 
-        // GET api
+        // GET places api
         app.get('/places', async (req, res) => {
             const cursor = placesCollection.find();
             const places = await cursor.toArray();
             res.send(places);
+        });
+
+        // GET orders api
+        app.get('/orders', async (req, res) => {
+            const cursor = ordersCollection.find();
+            const orders = await cursor.toArray();
+            res.send(orders);
         });
 
         // POST api for places
@@ -41,10 +48,10 @@ async function run() {
         // POST api for orders
         app.post('/orders', async (req, res) => {
             const order = req.body;
-            // console.log('Hit the post', place);
 
+            console.log('Hit the post', order);
             const result = await ordersCollection.insertOne(order);
-            console.log(result);
+            console.log('server result', result);
             res.json(result);
         })
 
