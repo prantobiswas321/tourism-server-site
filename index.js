@@ -19,6 +19,7 @@ async function run() {
         await client.connect();
         const database = client.db('tourism_book');
         const placesCollection = database.collection('places');
+        const ordersCollection = database.collection('orders');
 
         // GET api
         app.get('/places', async (req, res) => {
@@ -27,12 +28,22 @@ async function run() {
             res.send(places);
         });
 
-        // POST api
+        // POST api for places
         app.post('/places', async (req, res) => {
             const place = req.body;
-            console.log('Hit the post', place);
+            // console.log('Hit the post', place);
 
             const result = await placesCollection.insertOne(place);
+            // console.log(result);
+            res.json(result);
+        })
+
+        // POST api for orders
+        app.post('/orders', async (req, res) => {
+            const order = req.body;
+            // console.log('Hit the post', place);
+
+            const result = await ordersCollection.insertOne(order);
             console.log(result);
             res.json(result);
         })
