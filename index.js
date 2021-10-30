@@ -20,11 +20,23 @@ async function run() {
         const database = client.db('tourism_book');
         const placesCollection = database.collection('places');
 
+        // GET api
         app.get('/places', async (req, res) => {
             const cursor = placesCollection.find();
             const places = await cursor.toArray();
             res.send(places);
+        });
+
+        // POST api
+        app.post('/places', async (req, res) => {
+            const place = req.body;
+            console.log('Hit the post', place);
+
+            const result = await placesCollection.insertOne(place);
+            console.log(result);
+            res.json(result);
         })
+
     }
     finally {
         // await client.close();
