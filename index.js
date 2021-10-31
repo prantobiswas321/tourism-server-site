@@ -2,6 +2,7 @@ const express = require('express');
 const { MongoClient, MongoRuntimeError } = require('mongodb');
 require('dotenv').config();
 const cors = require('cors');
+const ObjectId = require('mongodb').ObjectId;
 
 
 const app = express();
@@ -52,6 +53,17 @@ async function run() {
             console.log('Hit the post', order);
             const result = await ordersCollection.insertOne(order);
             console.log('server result', result);
+            res.json(result);
+        })
+
+        // DELETE api
+        app.delete('/orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await ordersCollection.deleteOne(query);
+
+            console.log('deleteing user with id', result);
+
             res.json(result);
         })
 
