@@ -22,19 +22,44 @@ async function run() {
         const placesCollection = database.collection('places');
         const ordersCollection = database.collection('orders');
 
-        // GET places api
         app.get('/places', async (req, res) => {
-            const cursor = placesCollection.find();
-            const places = await cursor.toArray();
-            res.send(places);
-        });
+            const result = await placesCollection.find({}).toArray();
+            // console.log(result);
+            res.send(result);
+        })
 
-        // GET orders api
-        app.get('/orders', async (req, res) => {
-            const cursor = ordersCollection.find();
-            const orders = await cursor.toArray();
-            res.send(orders);
-        });
+
+        app.get('/order/:id', async (req, res) => {
+            const result = await placesCollection.findOne({ _id: ObjectId(req.params.id) });
+            res.send(result);
+        })
+
+        app.post('/userOrder', async (req, res) => {
+            const result = await ordersCollection.insertOne(req.body);
+            res.send(result);
+        })
+
+        // last one
+        app.get('/userOrder', async (req, res) => {
+            const result = await ordersCollection.find({}).toArray();
+            res.send(result);
+        })
+
+        app.get('/allOrders', async (req, res) => {
+
+            const result = await ordersCollection.find({}).toArray();
+            res.send(result);
+        })
+
+        app.delete('/deleteOrder/:id', async (req, res) => {
+            const result = await ordersCollection.deleteOne({ _id: ObjectId(req.params.id) });
+            res.send(result);
+        })
+
+        app.get('/myOrders/:email', async (req, res) => {
+            const result = await ordersCollection.find({ userEmail: req.params.email }).toArray();
+            res.send(result);
+        })
 
         // POST api for places
         app.post('/places', async (req, res) => {
@@ -43,27 +68,6 @@ async function run() {
 
             const result = await placesCollection.insertOne(place);
             // console.log(result);
-            res.json(result);
-        })
-
-        // POST api for orders
-        app.post('/orders', async (req, res) => {
-            const order = req.body;
-
-            console.log('Hit the post', order);
-            const result = await ordersCollection.insertOne(order);
-            console.log('server result', result);
-            res.json(result);
-        })
-
-        // DELETE api
-        app.delete('/orders/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await ordersCollection.deleteOne(query);
-
-            console.log('deleteing user with id', result);
-
             res.json(result);
         })
 
